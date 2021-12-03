@@ -13,10 +13,13 @@
 
   <main class="content">
     <section>
-      <h1>Tableau Database Changer</h1>
-      <fieldset>
-        <input type="file" name="" id="file" onchange="getFile();">
-      </fieldset>
+      <h2 class="section-title">Tableau Database Changer</h2>
+      <div class="file-upload">
+        <label class="btn btn-action custom-file-upload" for="file">Upload .twb</label>
+        <input type="file" name="file" id="file" onchange="getFile();">
+      </div>
+
+
       <div id="output"></div>
 
     </section>

@@ -1,5 +1,4 @@
 function parseText(fileName, xmlDoc) {
-  console.log(xmlDoc);
   let workbookElements = { name: fileName, datasources: [] };
 
   let datasources = xmlDoc.getElementsByTagName("datasources")[0].children;
@@ -23,11 +22,16 @@ function parseText(fileName, xmlDoc) {
 
 function createForm(workbookElements) {
   let outputDiv = document.querySelector("#output");
-
+  var fieldset = document.createElement("fieldset");
+  outputDiv.appendChild(fieldset);
   for (let datasource of workbookElements.datasources) {
     let datasourceCaption = datasource.tag.getAttribute("caption");
+    if (!datasourceCaption) {
+      continue;
+    }
     var datasourceDiv = document.createElement("div");
-    outputDiv.appendChild(datasourceDiv);
+    datasourceDiv.className = "input-group";
+    fieldset.appendChild(datasourceDiv);
 
     const datasourceCaptionLabel = document.createElement("label");
     datasourceCaptionLabel.setAttribute("for", datasourceCaption);
@@ -37,6 +41,8 @@ function createForm(workbookElements) {
     const datasourceCaptionInput = document.createElement("input");
     datasourceCaptionInput.setAttribute("name", datasourceCaption);
     datasourceCaptionInput.setAttribute("value", datasourceCaption);
+    datasourceCaptionInput.setAttribute("type", "text");
+
     datasourceCaptionInput.dataset.caption = datasourceCaption;
     datasourceDiv.appendChild(datasourceCaptionInput);
 
@@ -45,7 +51,9 @@ function createForm(workbookElements) {
 
     for (let connection of datasource.connections) {
       let connectionDbname = connection.getAttribute("dbname");
-
+      if (!connectionDbname) {
+        continue;
+      }
       const connectionDbnameLabel = document.createElement("label");
       connectionDbnameLabel.setAttribute("for", connectionDbname);
       connectionDbnameLabel.innerHTML = "Database Name: ";
@@ -54,6 +62,8 @@ function createForm(workbookElements) {
       const connectionDbnameInput = document.createElement("input");
       connectionDbnameInput.setAttribute("name", connectionDbname);
       connectionDbnameInput.setAttribute("value", connectionDbname);
+      connectionDbnameInput.setAttribute("type", "text");
+
       connectionDbnameInput.dataset.dbname = connectionDbname;
       datasourceDiv.appendChild(connectionDbnameInput);
 
@@ -64,18 +74,25 @@ function createForm(workbookElements) {
     datasourceDiv.appendChild(line);
   }
   const actionButton = document.createElement("button");
+  actionButton.className = "btn btn-action";
   actionButton.innerHTML = "Download";
   actionButton.onclick = changeWorkbookElement;
-  datasourceDiv.appendChild(actionButton);
+  fieldset.appendChild(actionButton);
 }
 
 function changeWorkbookElement() {
   for (let datasource of workbookElements.datasources) {
     datasourceCaption = datasource.tag.getAttribute("caption");
+    if (!datasourceCaption) {
+      continue;
+    }
     datasourceCaptionInput = document.querySelector(`input[data-caption="${datasourceCaption}"]`).value;
     datasource.tag.setAttribute("caption", datasourceCaptionInput);
     for (let connection of datasource.connections) {
       connectionDbname = connection.getAttribute("dbname");
+      if (!connectionDbname) {
+        continue;
+      }
       datasourceCaptionInput = document.querySelector(`input[data-dbname="${connectionDbname}"]`).value;
       connection.setAttribute("dbname", connectionDbname);
     }
