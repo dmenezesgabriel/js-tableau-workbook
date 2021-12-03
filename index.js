@@ -96,25 +96,40 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
-async function getFile(url) {
-  let content;
-  await fetch(url)
-    .then((response) => {
-      return response.text();
-    })
-    .then((text) => {
-      content = text;
-    });
-  return content;
-}
+// async function fetchFile(url) {
+//   let content;
+//   await fetch(url)
+//     .then((response) => {
+//       return response.text();
+//     })
+//     .then((text) => {
+//       content = text;
+//     });
+//   return content;
+// }
 
-async function main() {
+// async function main() {
+//   const parser = new DOMParser();
+
+//   content = await fetchFile("/samples/sample.twb");
+//   xmlDoc = parser.parseFromString(content, "text/xml");
+//   workbookElements = parseText(xmlDoc);
+//   createForm(workbookElements);
+// }
+
+function getFile() {
   const parser = new DOMParser();
+  var file = document.getElementById("file").files[0];
 
-  content = await getFile("/samples/sample.twb");
-  xmlDoc = parser.parseFromString(content, "text/xml");
-  workbookElements = parseText(xmlDoc);
-  createForm(workbookElements);
+  console.log(file.name);
+  var reader = new FileReader();
+  reader.readAsText(file, "UTF-8");
+  reader.onload = (event) => {
+    content = event.target.result;
+    xmlDoc = parser.parseFromString(content, "text/xml");
+    workbookElements = parseText(xmlDoc);
+    createForm(workbookElements);
+  };
 }
 
-main();
+// main();
