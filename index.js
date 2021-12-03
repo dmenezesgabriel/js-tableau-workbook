@@ -1,6 +1,6 @@
-function parseText(xmlDoc) {
+function parseText(fileName, xmlDoc) {
   console.log(xmlDoc);
-  let workbookElements = { datasources: [] };
+  let workbookElements = { name: fileName, datasources: [] };
 
   let datasources = xmlDoc.getElementsByTagName("datasources")[0].children;
   //  Datasources
@@ -80,7 +80,7 @@ function changeWorkbookElement() {
   }
   const serializer = new XMLSerializer();
   const xmlStr = serializer.serializeToString(xmlDoc);
-  download("out.twb", xmlStr);
+  download(`${workbookElements.name}`, xmlStr);
 }
 
 function download(filename, text) {
@@ -127,7 +127,7 @@ function getFile() {
   reader.onload = (event) => {
     content = event.target.result;
     xmlDoc = parser.parseFromString(content, "text/xml");
-    workbookElements = parseText(xmlDoc);
+    workbookElements = parseText(file.name, xmlDoc);
     createForm(workbookElements);
   };
 }
