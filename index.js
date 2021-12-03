@@ -26,12 +26,12 @@ function createForm(workbookElements) {
 
   for (let datasource of workbookElements.datasources) {
     let datasourceCaption = datasource.tag.getAttribute("caption");
-    let datasourceDiv = document.createElement("div");
+    var datasourceDiv = document.createElement("div");
     outputDiv.appendChild(datasourceDiv);
 
     const datasourceCaptionLabel = document.createElement("label");
     datasourceCaptionLabel.setAttribute("for", datasourceCaption);
-    datasourceCaptionLabel.innerHTML = "DB CAPTION: ";
+    datasourceCaptionLabel.innerHTML = "Database Caption: ";
     datasourceDiv.appendChild(datasourceCaptionLabel);
 
     const datasourceCaptionInput = document.createElement("input");
@@ -48,7 +48,7 @@ function createForm(workbookElements) {
 
       const connectionDbnameLabel = document.createElement("label");
       connectionDbnameLabel.setAttribute("for", connectionDbname);
-      connectionDbnameLabel.innerHTML = "DB Name: ";
+      connectionDbnameLabel.innerHTML = "Database Name: ";
       datasourceDiv.appendChild(connectionDbnameLabel);
 
       const connectionDbnameInput = document.createElement("input");
@@ -60,11 +60,13 @@ function createForm(workbookElements) {
       const breakRow = document.createElement("br");
       datasourceDiv.appendChild(breakRow);
     }
+    const line = document.createElement("hr");
+    datasourceDiv.appendChild(line);
   }
   const actionButton = document.createElement("button");
-  actionButton.innerHTML = "Apply";
+  actionButton.innerHTML = "Download";
   actionButton.onclick = changeWorkbookElement;
-  document.body.appendChild(actionButton);
+  datasourceDiv.appendChild(actionButton);
 }
 
 function changeWorkbookElement() {
