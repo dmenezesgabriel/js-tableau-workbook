@@ -96,6 +96,21 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
+function getFile() {
+  const parser = new DOMParser();
+  var file = document.getElementById("file").files[0];
+
+  console.log(file.name);
+  var reader = new FileReader();
+  reader.readAsText(file, "UTF-8");
+  reader.onload = (event) => {
+    content = event.target.result;
+    xmlDoc = parser.parseFromString(content, "text/xml");
+    workbookElements = parseText(file.name, xmlDoc);
+    createForm(workbookElements);
+  };
+}
+
 // async function fetchFile(url) {
 //   let content;
 //   await fetch(url)
@@ -116,20 +131,5 @@ function download(filename, text) {
 //   workbookElements = parseText(xmlDoc);
 //   createForm(workbookElements);
 // }
-
-function getFile() {
-  const parser = new DOMParser();
-  var file = document.getElementById("file").files[0];
-
-  console.log(file.name);
-  var reader = new FileReader();
-  reader.readAsText(file, "UTF-8");
-  reader.onload = (event) => {
-    content = event.target.result;
-    xmlDoc = parser.parseFromString(content, "text/xml");
-    workbookElements = parseText(file.name, xmlDoc);
-    createForm(workbookElements);
-  };
-}
 
 // main();
