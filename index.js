@@ -1,4 +1,5 @@
 function parseText(xmlDoc) {
+  console.log(xmlDoc);
   let workbookElements = { datasources: [] };
 
   let datasources = xmlDoc.getElementsByTagName("datasources")[0].children;
@@ -20,16 +21,6 @@ function parseText(xmlDoc) {
   return workbookElements;
 }
 
-function changeWorkbookElement(workbookElements) {
-  for (let datasource of workbookElements.datasources) {
-    for (let connection of datasource.connections) {
-      console.log(connection.getAttribute("class"));
-      connection.setAttribute("class", "batata");
-      console.log(connection.getAttribute("class"));
-    }
-  }
-}
-
 function createForm(workbookElements) {
   let outputDiv = document.querySelector("#output");
 
@@ -46,6 +37,7 @@ function createForm(workbookElements) {
     const datasourceCaptionInput = document.createElement("input");
     datasourceCaptionInput.setAttribute("name", datasourceCaption);
     datasourceCaptionInput.setAttribute("value", datasourceCaption);
+    datasourceCaptionInput.dataset.caption = datasourceCaption;
     datasourceDiv.appendChild(datasourceCaptionInput);
 
     const breakRow = document.createElement("br");
@@ -62,12 +54,46 @@ function createForm(workbookElements) {
       const connectionDbnameInput = document.createElement("input");
       connectionDbnameInput.setAttribute("name", connectionDbname);
       connectionDbnameInput.setAttribute("value", connectionDbname);
+      connectionDbnameInput.dataset.dbname = connectionDbname;
       datasourceDiv.appendChild(connectionDbnameInput);
 
       const breakRow = document.createElement("br");
       datasourceDiv.appendChild(breakRow);
     }
   }
+  const actionButton = document.createElement("button");
+  actionButton.innerHTML = "Apply";
+  actionButton.onclick = changeWorkbookElement;
+  document.body.appendChild(actionButton);
+}
+
+function changeWorkbookElement() {
+  for (let datasource of workbookElements.datasources) {
+    datasourceCaption = datasource.tag.getAttribute("caption");
+    datasourceCaptionInput = document.querySelector(`input[data-caption="${datasourceCaption}"]`).value;
+    datasource.tag.setAttribute("caption", datasourceCaptionInput);
+    for (let connection of datasource.connections) {
+      connectionDbname = connection.getAttribute("dbname");
+      datasourceCaptionInput = document.querySelector(`input[data-dbname="${connectionDbname}"]`).value;
+      connection.setAttribute("dbname", connectionDbname);
+    }
+  }
+  const serializer = new XMLSerializer();
+  const xmlStr = serializer.serializeToString(xmlDoc);
+  download("out.twb", xmlStr);
+}
+
+function download(filename, text) {
+  var element = document.createElement("a");
+  element.setAttribute("href", "data:text/twb;charset=utf-8," + encodeURIComponent(text));
+  element.setAttribute("download", filename);
+
+  element.style.display = "none";
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 async function getFile(url) {
@@ -86,10 +112,9 @@ async function main() {
   const parser = new DOMParser();
 
   content = await getFile("/samples/sample.twb");
-  let xmlDoc = parser.parseFromString(content, "text/xml");
+  xmlDoc = parser.parseFromString(content, "text/xml");
   workbookElements = parseText(xmlDoc);
   createForm(workbookElements);
-  // changeWorkbookElement(workbookElements);
 }
 
 main();
