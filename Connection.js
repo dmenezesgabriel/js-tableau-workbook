@@ -1,5 +1,6 @@
 export default class Connection {
-  constructor(dbname) {
-    this.dbname = dbname;
+  constructor(connectionXML) {
+    this._connectionXML = connectionXML;
+    this._dbName = connectionXML.getAttribute("dbname");
   }
 }

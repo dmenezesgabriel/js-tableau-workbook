@@ -1,18 +1,25 @@
-import XFile from "./XFile.js";
+import Datasource from "./Datasource.js";
 
 export default class Workbook {
   /**
   Class for writing tableau workbook files
    */
-  constructor(file) {
-    this._filename = file.name;
-    this._workbookTree = XFile.getTree(file);
-    this._datasources = this.datasources = [];
-    this.addDatasource = this.addDatasource.bind(this);
-  }
-  addDatasource(datasource) {
-    this.datasources.push(datasource);
+  constructor(filename, xml) {
+    this._fileName = filename;
+    this._workbookXML = xml;
+    this._datasources = this.prepareDatasources(this._workbookXML);
   }
 
-  _getContentFromFile(file) {}
+  prepareDatasources(workbookXML) {
+    let datasources = [];
+
+    let datasourceElements = workbookXML.getElementsByTagName("datasources")[0].children;
+    if (!datasourceElements) return [];
+
+    for (let datasource of datasourceElements) {
+      let datasourceXML = new Datasource(datasource);
+      datasources.push(datasourceXML);
+    }
+    return datasources;
+  }
 }

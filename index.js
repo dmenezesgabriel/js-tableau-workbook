@@ -118,10 +118,16 @@ import Workbook from "./Workbook.js";
 // }
 
 function getFile() {
-  const parser = new DOMParser();
   let file = document.getElementById("file").files[0];
-  let workbook = new Workbook(file);
-  console.log(workbook);
+  const reader = new FileReader();
+  const parser = new DOMParser();
+  let xmlDoc = reader.readAsText(file, "UTF-8");
+  reader.onload = (event) => {
+    let xmlDoc = parser.parseFromString(event.target.result, "text/xml");
+    let workbook = new Workbook(file.name, xmlDoc);
+    console.log(workbook);
+  };
+
   // console.log(file.name);
   // var reader = new FileReader();
   // reader.readAsText(file, "UTF-8");
