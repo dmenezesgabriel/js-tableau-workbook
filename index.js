@@ -1,134 +1,150 @@
-function parseText(fileName, xmlDoc) {
-  let workbookElements = { name: fileName, datasources: [] };
+import Workbook from "./Workbook.js";
 
-  let datasources = xmlDoc.getElementsByTagName("datasources")[0].children;
-  //  Datasources
-  for (let datasource of datasources) {
-    datasourceObj = { tag: "", connections: [] };
-    // Data Source
-    let datasourceCaption = datasource.getAttribute("caption");
-    datasourceObj.tag = datasource;
-    // Connections
-    let connections = datasource.getElementsByTagName("connection");
-    for (let index = 0; index < connections.length; index++) {
-      // Connection
-      let connection = connections[index];
-      datasourceObj.connections.push(connection);
-    }
-    workbookElements.datasources.push(datasourceObj);
-  }
-  return workbookElements;
-}
+// function parseText(fileName, xmlDoc) {
+//   let workbookElements = { name: fileName, datasources: [] };
 
-function createForm(workbookElements) {
-  let outputDiv = document.querySelector("#output");
-  var fieldset = document.createElement("fieldset");
-  outputDiv.appendChild(fieldset);
-  for (let datasource of workbookElements.datasources) {
-    let datasourceCaption = datasource.tag.getAttribute("caption");
-    if (!datasourceCaption) {
-      continue;
-    }
-    var datasourceDiv = document.createElement("div");
-    datasourceDiv.className = "input-group";
-    fieldset.appendChild(datasourceDiv);
+//   let datasources = xmlDoc.getElementsByTagName("datasources")[0].children;
+//   //  Datasources
+//   for (let datasource of datasources) {
+//     datasourceObj = { tag: "", connections: [] };
+//     // Data Source
+//     let datasourceCaption = datasource.getAttribute("caption");
+//     datasourceObj.tag = datasource;
+//     // Connections
+//     let connections = datasource.getElementsByTagName("connection");
+//     for (let index = 0; index < connections.length; index++) {
+//       // Connection
+//       let connection = connections[index];
+//       datasourceObj.connections.push(connection);
+//     }
+//     workbookElements.datasources.push(datasourceObj);
+//   }
+//   return workbookElements;
+// }
 
-    const datasourceCaptionLabel = document.createElement("label");
-    datasourceCaptionLabel.setAttribute("for", datasourceCaption);
-    datasourceCaptionLabel.innerHTML = "Database Caption: ";
-    datasourceDiv.appendChild(datasourceCaptionLabel);
+// function createForm(workbookElements) {
+//   let outputDiv = document.querySelector("#output");
+//   var fieldset = document.createElement("fieldset");
+//   outputDiv.appendChild(fieldset);
+//   for (let datasource of workbookElements.datasources) {
+//     let datasourceCaption = datasource.tag.getAttribute("caption");
+//     if (!datasourceCaption) {
+//       continue;
+//     }
+//     var datasourceDiv = document.createElement("div");
+//     datasourceDiv.className = "input-group";
+//     fieldset.appendChild(datasourceDiv);
 
-    const datasourceCaptionInput = document.createElement("input");
-    datasourceCaptionInput.setAttribute("name", datasourceCaption);
-    datasourceCaptionInput.setAttribute("value", datasourceCaption);
-    datasourceCaptionInput.setAttribute("type", "text");
+//     const datasourceCaptionLabel = document.createElement("label");
+//     datasourceCaptionLabel.setAttribute("for", datasourceCaption);
+//     datasourceCaptionLabel.innerHTML = "Database Caption: ";
+//     datasourceDiv.appendChild(datasourceCaptionLabel);
 
-    datasourceCaptionInput.dataset.caption = datasourceCaption;
-    datasourceDiv.appendChild(datasourceCaptionInput);
+//     const datasourceCaptionInput = document.createElement("input");
+//     datasourceCaptionInput.setAttribute("name", datasourceCaption);
+//     datasourceCaptionInput.setAttribute("value", datasourceCaption);
+//     datasourceCaptionInput.setAttribute("type", "text");
 
-    const breakRow = document.createElement("br");
-    datasourceDiv.appendChild(breakRow);
+//     datasourceCaptionInput.dataset.caption = datasourceCaption;
+//     datasourceDiv.appendChild(datasourceCaptionInput);
 
-    for (let connection of datasource.connections) {
-      let connectionDbname = connection.getAttribute("dbname");
-      if (!connectionDbname) {
-        continue;
-      }
-      const connectionDbnameLabel = document.createElement("label");
-      connectionDbnameLabel.setAttribute("for", connectionDbname);
-      connectionDbnameLabel.innerHTML = "Database Name: ";
-      datasourceDiv.appendChild(connectionDbnameLabel);
+//     const breakRow = document.createElement("br");
+//     datasourceDiv.appendChild(breakRow);
 
-      const connectionDbnameInput = document.createElement("input");
-      connectionDbnameInput.setAttribute("name", connectionDbname);
-      connectionDbnameInput.setAttribute("value", connectionDbname);
-      connectionDbnameInput.setAttribute("type", "text");
+//     for (let connection of datasource.connections) {
+//       let connectionDbname = connection.getAttribute("dbname");
+//       if (!connectionDbname) {
+//         continue;
+//       }
+//       const connectionDbnameLabel = document.createElement("label");
+//       connectionDbnameLabel.setAttribute("for", connectionDbname);
+//       connectionDbnameLabel.innerHTML = "Database Name: ";
+//       datasourceDiv.appendChild(connectionDbnameLabel);
 
-      connectionDbnameInput.dataset.dbname = connectionDbname;
-      datasourceDiv.appendChild(connectionDbnameInput);
+//       const connectionDbnameInput = document.createElement("input");
+//       connectionDbnameInput.setAttribute("name", connectionDbname);
+//       connectionDbnameInput.setAttribute("value", connectionDbname);
+//       connectionDbnameInput.setAttribute("type", "text");
 
-      const breakRow = document.createElement("br");
-      datasourceDiv.appendChild(breakRow);
-    }
-    const line = document.createElement("hr");
-    datasourceDiv.appendChild(line);
-  }
-  const actionButton = document.createElement("button");
-  actionButton.className = "btn btn-action";
-  actionButton.innerHTML = "Download";
-  actionButton.onclick = changeWorkbookElement;
-  fieldset.appendChild(actionButton);
-}
+//       connectionDbnameInput.dataset.dbname = connectionDbname;
+//       datasourceDiv.appendChild(connectionDbnameInput);
 
-function changeWorkbookElement() {
-  for (let datasource of workbookElements.datasources) {
-    datasourceCaption = datasource.tag.getAttribute("caption");
-    if (!datasourceCaption) {
-      continue;
-    }
-    datasourceCaptionInput = document.querySelector(`input[data-caption="${datasourceCaption}"]`).value;
-    datasource.tag.setAttribute("caption", datasourceCaptionInput);
-    for (let connection of datasource.connections) {
-      connectionDbname = connection.getAttribute("dbname");
-      if (!connectionDbname) {
-        continue;
-      }
-      datasourceCaptionInput = document.querySelector(`input[data-dbname="${connectionDbname}"]`).value;
-      connection.setAttribute("dbname", connectionDbname);
-    }
-  }
-  const serializer = new XMLSerializer();
-  const xmlStr = serializer.serializeToString(xmlDoc);
-  download(`${workbookElements.name}`, xmlStr);
-}
+//       const breakRow = document.createElement("br");
+//       datasourceDiv.appendChild(breakRow);
+//     }
+//     const line = document.createElement("hr");
+//     datasourceDiv.appendChild(line);
+//   }
+//   const actionButton = document.createElement("button");
+//   actionButton.className = "btn btn-action";
+//   actionButton.innerHTML = "Download";
+//   actionButton.onclick = changeWorkbookElement;
+//   fieldset.appendChild(actionButton);
+// }
 
-function download(filename, text) {
-  var element = document.createElement("a");
-  element.setAttribute("href", "data:text/twb;charset=utf-8," + encodeURIComponent(text));
-  element.setAttribute("download", filename);
+// function changeWorkbookElement() {
+//   for (let datasource of workbookElements.datasources) {
+//     datasourceCaption = datasource.tag.getAttribute("caption");
+//     if (!datasourceCaption) {
+//       continue;
+//     }
+//     datasourceCaptionInput = document.querySelector(`input[data-caption="${datasourceCaption}"]`).value;
+//     datasource.tag.setAttribute("caption", datasourceCaptionInput);
+//     for (let connection of datasource.connections) {
+//       connectionDbname = connection.getAttribute("dbname");
+//       if (!connectionDbname) {
+//         continue;
+//       }
+//       datasourceCaptionInput = document.querySelector(`input[data-dbname="${connectionDbname}"]`).value;
+//       connection.setAttribute("dbname", connectionDbname);
+//     }
+//   }
+//   const serializer = new XMLSerializer();
+//   const xmlStr = serializer.serializeToString(xmlDoc);
+//   download(`${workbookElements.name}`, xmlStr);
+// }
 
-  element.style.display = "none";
-  document.body.appendChild(element);
+// function download(filename, text) {
+//   var element = document.createElement("a");
+//   element.setAttribute("href", "data:text/twb;charset=utf-8," + encodeURIComponent(text));
+//   element.setAttribute("download", filename);
 
-  element.click();
+//   element.style.display = "none";
+//   document.body.appendChild(element);
 
-  document.body.removeChild(element);
-}
+//   element.click();
+
+//   document.body.removeChild(element);
+// }
 
 function getFile() {
   const parser = new DOMParser();
-  var file = document.getElementById("file").files[0];
-
-  console.log(file.name);
-  var reader = new FileReader();
-  reader.readAsText(file, "UTF-8");
-  reader.onload = (event) => {
-    content = event.target.result;
-    xmlDoc = parser.parseFromString(content, "text/xml");
-    workbookElements = parseText(file.name, xmlDoc);
-    createForm(workbookElements);
-  };
+  let file = document.getElementById("file").files[0];
+  let workbook = new Workbook(file);
+  console.log(workbook);
+  // console.log(file.name);
+  // var reader = new FileReader();
+  // reader.readAsText(file, "UTF-8");
+  // reader.onload = (event) => {
+  //   content = event.target.result;
+  //   xmlDoc = parser.parseFromString(content, "text/xml");
+  //   workbookElements = parseText(file.name, xmlDoc);
+  //   createForm(workbookElements);
+  // };
 }
+
+async function main() {
+  // const parser = new DOMParser();
+  // content = await fetchFile("/samples/sample.twb");
+  // xmlDoc = parser.parseFromString(content, "text/xml");
+  // workbookElements = parseText(xmlDoc);
+  // createForm(workbookElements);
+
+  let fileUpload = document.querySelector("#file");
+  fileUpload.onchange = getFile;
+}
+
+main();
 
 // async function fetchFile(url) {
 //   let content;
@@ -141,14 +157,3 @@ function getFile() {
 //     });
 //   return content;
 // }
-
-// async function main() {
-//   const parser = new DOMParser();
-
-//   content = await fetchFile("/samples/sample.twb");
-//   xmlDoc = parser.parseFromString(content, "text/xml");
-//   workbookElements = parseText(xmlDoc);
-//   createForm(workbookElements);
-// }
-
-// main();
