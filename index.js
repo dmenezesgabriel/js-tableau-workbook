@@ -117,15 +117,25 @@ import Workbook from "./Workbook.js";
 //   document.body.removeChild(element);
 // }
 
-function getFile() {
+function getWorkbook() {
   let file = document.getElementById("file").files[0];
   const reader = new FileReader();
   const parser = new DOMParser();
   let xmlDoc = reader.readAsText(file, "UTF-8");
+  // Since onload has asynchronous behaviour subsequent code must be trigger by a callback
   reader.onload = (event) => {
     let xmlDoc = parser.parseFromString(event.target.result, "text/xml");
     let workbook = new Workbook(file.name, xmlDoc);
     console.log(workbook);
+
+    for (let datasourceIndex in workbook.datasources) {
+      let datasource = workbook.datasources[datasourceIndex];
+      console.log(datasource);
+      for (let connectionIndex in datasource.connections) {
+        let connection = datasource.connections[connectionIndex];
+        console.log(connection);
+      }
+    }
   };
 
   // console.log(file.name);
@@ -147,7 +157,7 @@ async function main() {
   // createForm(workbookElements);
 
   let fileUpload = document.querySelector("#file");
-  fileUpload.onchange = getFile;
+  fileUpload.onchange = getWorkbook;
 }
 
 main();

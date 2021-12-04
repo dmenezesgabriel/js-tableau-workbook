@@ -22,4 +22,8 @@ export default class Workbook {
     }
     return datasources;
   }
+
+  get datasources() {
+    return this._datasources;
+  }
 }
