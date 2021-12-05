@@ -7,10 +7,10 @@ export default class Datasource {
     this._name = this._datasourceXML.getAttribute("name");
     this._version = this._datasourceXML.getAttribute("version");
     this._caption = this._datasourceXML.getAttribute("caption");
-    this._connections = this.prepareConnections(this._datasourceXML);
+    this._connections = this._prepareConnections(this._datasourceXML);
   }
 
-  prepareConnections(datasourceXML) {
+  _prepareConnections(datasourceXML) {
     let connections = [];
     let connectionsElements = datasourceXML.getElementsByTagName("connection");
     for (let index = 0; index < connectionsElements.length; index++) {

@@ -1,4 +1,5 @@
 import Datasource from "./Datasource.js";
+import Worksheet from "./Worksheet.js";
 
 export default class Workbook {
   /**
@@ -41,12 +42,12 @@ export default class Workbook {
   _prepareWorksheets(workbookXML) {
     let worksheets = [];
 
-    let dashboardElements = workbookXML.getElementsByTagName("worksheets")[0].children;
-    if (!dashboardElements) return [];
+    let worksheetElements = workbookXML.getElementsByTagName("worksheets")[0].children;
+    if (!worksheetElements) return [];
 
-    for (let dashboard of dashboardElements) {
-      let dashboardName = dashboard.getAttribute("name");
-      worksheets.push(dashboardName);
+    for (let worksheet of worksheetElements) {
+      let worksheetXML = new Worksheet(worksheet);
+      worksheets.push(worksheetXML);
     }
     return worksheets;
   }
