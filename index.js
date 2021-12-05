@@ -16,6 +16,11 @@ function callback(filename, xml) {
   let workbook = new Workbook(filename, xml);
   console.log(workbook);
 
+  for (let dashboardIndex in workbook.dashboards) {
+    let dashboard = workbook.dashboards[dashboardIndex];
+    console.log(dashboard);
+  }
+
   for (let datasourceIndex in workbook.datasources) {
     let datasource = workbook.datasources[datasourceIndex];
     console.log(datasource);
@@ -25,7 +30,7 @@ function callback(filename, xml) {
       connection.dbName = "sample-testing";
     }
   }
-  workbook.save();
+  // workbook.save();
 }
 
 async function main() {
