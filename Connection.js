@@ -16,6 +16,7 @@ export default class Connection {
   }
 
   set dbName(dbName) {
+    this._dbName = dbName;
     this._connectionXML.setAttribute("dbname", dbName);
   }
 
@@ -24,6 +25,7 @@ export default class Connection {
   }
 
   set server(server) {
+    this._server = server;
     this._connectionXML.setAttribute("server", server);
   }
 
@@ -32,6 +34,7 @@ export default class Connection {
   }
 
   set username(username) {
+    this._username = username;
     this._connectionXML.setAttribute("username", username);
   }
 
@@ -40,6 +43,7 @@ export default class Connection {
   }
 
   set authentication(authentication) {
+    this._authentication = authentication;
     this._connectionXML.setAttribute("authentication", authentication);
   }
 
@@ -48,6 +52,7 @@ export default class Connection {
   }
 
   set className(className) {
+    this._class = className;
     this._connectionXML.setAttribute("class", className);
   }
 
@@ -56,14 +61,7 @@ export default class Connection {
   }
 
   set schema(schema) {
-    this._connectionXML.setAttribute("schema", schema);
-  }
-
-  get schema() {
-    return this._class;
-  }
-
-  set schema(schema) {
+    this._schema = schema;
     this._connectionXML.setAttribute("schema", schema);
   }
 
@@ -72,6 +70,7 @@ export default class Connection {
   }
 
   set service(service) {
+    this._service = service;
     this._connectionXML.setAttribute("service", service);
   }
 
@@ -80,6 +79,7 @@ export default class Connection {
   }
 
   set port(port) {
+    this._port = port;
     this._connectionXML.setAttribute("port", port);
   }
 }
