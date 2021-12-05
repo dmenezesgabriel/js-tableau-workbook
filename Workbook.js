@@ -52,28 +52,15 @@ export default class Workbook {
     return datasourceIndexes;
   }
 
-  _prepareWorksheets(workbookXML, datasourcesIndex) {
+  _prepareWorksheets(workbookXML) {
     let worksheets = [];
 
     let worksheetElements = workbookXML.getElementsByTagName("worksheets")[0].children;
     if (!worksheetElements) return [];
 
-    for (let worksheet of worksheetElements) {
-      let worksheetXML = new Worksheet(worksheet);
-      worksheets.push(worksheetXML);
-
-      let dependencies = worksheet.getElementsByTagName("datasource-dependencies");
-      for (let index = 0; index < dependencies.length; index++) {
-        let dependency = dependencies[index];
-        let datasourceName = dependency.getAttribute("datasource");
-        let datasource = datasourcesIndex[datasourceName];
-        let columns = worksheet.getElementsByTagName("column");
-        for (let index = 0; index < columns.length; index++) {
-          let column = columns[index];
-          let columnName = column.getAttribute("name");
-          console.log(`Column name: ${columnName}`);
-        }
-      }
+    for (let worksheetXML of worksheetElements) {
+      let worksheet = new Worksheet(worksheetXML);
+      worksheets.push(worksheet);
     }
     return worksheets;
   }
