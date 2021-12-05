@@ -22,8 +22,10 @@ function callback(filename, xml) {
     for (let connectionIndex in datasource.connections) {
       let connection = datasource.connections[connectionIndex];
       console.log(connection);
+      connection.dbName = "sample-testing";
     }
   }
+  workbook.save();
 }
 
 async function main() {

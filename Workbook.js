@@ -26,4 +26,20 @@ export default class Workbook {
   get datasources() {
     return this._datasources;
   }
+
+  save() {
+    const serializer = new XMLSerializer();
+    const xmlStr = serializer.serializeToString(this._workbookXML);
+    let downloadAnchor = document.createElement("a");
+
+    downloadAnchor.setAttribute("href", "data:text/twb;charset=utf-8," + encodeURIComponent(xmlStr));
+    downloadAnchor.setAttribute("download", this._fileName);
+
+    downloadAnchor.style.display = "none";
+    document.body.appendChild(downloadAnchor);
+
+    downloadAnchor.click();
+
+    document.body.removeChild(downloadAnchor);
+  }
 }
