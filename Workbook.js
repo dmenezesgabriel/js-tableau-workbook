@@ -9,6 +9,7 @@ export default class Workbook {
     this._workbookXML = xml;
     this._dashboards = this._prepareDashboards(this._workbookXML);
     this._datasources = this._prepareDatasources(this._workbookXML);
+    this._worksheets = this._prepareWorksheets(this._workbookXML);
   }
 
   _prepareDashboards(workbookXML) {
@@ -37,12 +38,29 @@ export default class Workbook {
     return datasources;
   }
 
+  _prepareWorksheets(workbookXML) {
+    let worksheets = [];
+
+    let dashboardElements = workbookXML.getElementsByTagName("worksheets")[0].children;
+    if (!dashboardElements) return [];
+
+    for (let dashboard of dashboardElements) {
+      let dashboardName = dashboard.getAttribute("name");
+      worksheets.push(dashboardName);
+    }
+    return worksheets;
+  }
+
   get datasources() {
     return this._datasources;
   }
 
   get dashboards() {
     return this._dashboards;
+  }
+
+  get worksheets() {
+    return this._worksheets;
   }
 
   save() {

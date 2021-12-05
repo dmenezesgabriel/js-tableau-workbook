@@ -21,6 +21,11 @@ function callback(filename, xml) {
     console.log(dashboard);
   }
 
+  for (let worksheetIndex in workbook.worksheets) {
+    let worksheet = workbook.worksheets[worksheetIndex];
+    console.log(worksheet);
+  }
+
   for (let datasourceIndex in workbook.datasources) {
     let datasource = workbook.datasources[datasourceIndex];
     console.log(datasource);
