@@ -21,6 +21,10 @@ export default class Datasource {
     return connections;
   }
 
+  get name() {
+    return this._name;
+  }
+
   get connections() {
     return this._connections;
   }
