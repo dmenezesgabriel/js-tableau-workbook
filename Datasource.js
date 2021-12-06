@@ -41,4 +41,8 @@ export default class Datasource {
   get connections() {
     return this._connections;
   }
+
+  get columns() {
+    return this._columns;
+  }
 }

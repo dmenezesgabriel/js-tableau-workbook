@@ -22,4 +22,12 @@ export default class Worksheet {
     }
     return datasourceDependencies;
   }
+
+  get name() {
+    return this._name;
+  }
+
+  get datasourceDependencies() {
+    return this._datasourceDependencies;
+  }
 }

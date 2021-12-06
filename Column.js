@@ -20,6 +20,10 @@ export default class Column {
     return formula;
   }
 
+  addUsedIn(worksheetName) {
+    this._usedIn.push(worksheetName);
+  }
+
   get name() {
     return this._name;
   }

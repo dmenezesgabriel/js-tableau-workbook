@@ -11,7 +11,8 @@ export default class Workbook {
     this._dashboards = this._prepareDashboards(this._workbookXML);
     this._datasources = this._prepareDatasources(this._workbookXML);
     this._datasourceIndex = this._prepareDatasourceIndex(this._datasources);
-    this._worksheets = this._prepareWorksheets(this._workbookXML, this._datasourceIndex);
+    this._worksheets = this._prepareWorksheets(this._workbookXML);
+    this._checkFieldsUsage(this._worksheets, this._datasourceIndex);
   }
 
   _prepareDashboards(workbookXML) {
@@ -65,16 +66,19 @@ export default class Workbook {
     return worksheets;
   }
 
-  get datasources() {
-    return this._datasources;
-  }
-
-  get dashboards() {
-    return this._dashboards;
-  }
-
-  get worksheets() {
-    return this._worksheets;
+  _checkFieldsUsage(worksheets, datasourcesIndex) {
+    for (let worksheet of worksheets) {
+      for (let datasourceDepIndex in worksheet.datasourceDependencies) {
+        let datasourceDep = worksheet.datasourceDependencies[datasourceDepIndex];
+        let datasource = datasourcesIndex[datasourceDep.name];
+        for (let columnIndex in datasource.columns) {
+          let column = datasource.columns[columnIndex];
+          if (datasourceDep.columns.includes(column.name)) {
+            column.addUsedIn(worksheet.name);
+          }
+        }
+      }
+    }
   }
 
   save() {
@@ -91,5 +95,17 @@ export default class Workbook {
     downloadAnchor.click();
 
     document.body.removeChild(downloadAnchor);
+  }
+
+  get datasources() {
+    return this._datasources;
+  }
+
+  get dashboards() {
+    return this._dashboards;
+  }
+
+  get worksheets() {
+    return this._worksheets;
   }
 }
